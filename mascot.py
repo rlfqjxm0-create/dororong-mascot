@@ -655,6 +655,38 @@ UPDATE_REPOS = {                 # 선물 캐릭터 자동 업데이트 배포 �
 }
 
 
+UPDATE_FLAG = ".updated"          # 업데이트 알림 신호 파일
+
+
+def mark_updated(state_dir, restart):
+    """업데이트 사실을 남긴다. restart=True면 껐다 켜야 반영되는 경우."""
+    try:
+        with open(os.path.join(state_dir, UPDATE_FLAG), "w",
+                  encoding="utf-8") as fp:
+            json.dump({"restart": bool(restart)}, fp)
+    except Exception:
+        pass
+
+
+def _take_update_flag(state_dir):
+    """신호를 읽고 지운다 — 한 번만 알리기 위해."""
+    p = os.path.join(state_dir, UPDATE_FLAG)
+    if not os.path.exists(p):
+        return None
+    restart = False
+    try:
+        with open(p, encoding="utf-8") as fp:
+            restart = bool(json.load(fp).get("restart"))
+    except Exception:
+        pass
+    try:
+        os.remove(p)
+    except Exception:
+        pass
+    return ("업데이트 됐어요! 껐다 켜주세요" if restart
+            else "새 버전으로 업데이트 됐어요!")
+
+
 def _parts_broken(char_dir):
     """layout.json과 실제 PNG가 어긋나 있는지 = 업데이트가 중간에 끊긴 상태.
 
@@ -686,7 +718,7 @@ def _parts_broken(char_dir):
     return False
 
 
-def repair_parts(char_dir):
+def repair_parts(char_dir, state_dir=None):
     """파츠가 섞여 있으면 배포 레포에서 다시 받아 맞춘다 (선물 exe 전용).
 
     자동 업데이트가 파일 하나씩 덮어쓰는 방식이라, 도중에 네트워크가 끊기면
@@ -719,6 +751,7 @@ def repair_parts(char_dir):
                     raise
                 time.sleep(1.0)
 
+    changed = []
     try:
         man = json.loads(fetch("version.json").decode("utf-8"))
         for rel, want in man.get("files", {}).items():
@@ -735,8 +768,12 @@ def repair_parts(char_dir):
             os.makedirs(os.path.dirname(p), exist_ok=True)
             with open(p, "wb") as fp:
                 fp.write(data)
+            changed.append(rel)
         with open(os.path.join(base, "version.json"), "w", encoding="utf-8") as fp:
             json.dump(man, fp)
+        if changed:
+            # mascot.py는 이미 메모리에 올라와 있어 껐다 켜야 반영된다
+            mark_updated(state_dir or char_dir, "mascot.py" in changed)
     except Exception:
         pass                                # 오프라인이면 있는 그대로 실행
 
@@ -749,7 +786,8 @@ class Mascot:
         # 설정·타이머 기록 저장 위치 (자동 업데이트로 교체되지 않는 곳으로 분리 가능)
         self.state_dir = state_dir or self.dir
         os.makedirs(self.state_dir, exist_ok=True)
-        repair_parts(self.dir)          # 업데이트가 끊겨 파츠가 섞였으면 복구
+        # 업데이트가 끊겨 파츠가 섞였으면 복구 (알림 신호도 여기서 남는다)
+        repair_parts(self.dir, self.state_dir)
         with open(os.path.join(self.dir, "config.json"), encoding="utf-8") as fp:
             self.cfg = json.load(fp)
 
@@ -846,6 +884,13 @@ class Mascot:
         self.smile_until = 0.0       # 웃는 표정 종료 시각
         self.celebrate_until = 0.0   # 축하 연출 종료 시각
         self._fail = {}              # 구역별 실패 횟수 (3회면 그 구역만 끔)
+        # 기록 갱신 축하 — '오늘'의 기준은 시각이 아니라 한 세션
+        # (작업 시작 ~ '작업 종료' 버튼). 종료하면 새 세션으로 다시 센다.
+        self.rec = {"strokes": [], "focus": 0.0}
+        self._rec_prev_run = 0.0
+        self._rec_armed = True       # 이번 집중 구간에서 아직 축하 안 함
+        self._rec_next = 0.0         # 축하 쿨다운 (연달아 뜨지 않게)
+        self._update_msg = _take_update_flag(self.state_dir)
         self.shadow_img_type = None  # 타자 자세용 그림자 (깃펜 없음)
         self._shadow_base = None
         self._shadow_typing = False
@@ -1589,6 +1634,11 @@ class Mascot:
             saved = st.get("stat")
             if isinstance(saved, dict):
                 self.stat.update({k: saved.get(k, v) for k, v in self.stat.items()})
+            r = st.get("rec")
+            if isinstance(r, dict):      # 세션이 이어지면 축하 기록도 이어받는다
+                self.rec["strokes"] = [int(v) for v in r.get("strokes", [])
+                                       if isinstance(v, (int, float))]
+                self.rec["focus"] = float(r.get("focus", 0) or 0)
         except Exception:
             pass
 
@@ -1596,12 +1646,19 @@ class Mascot:
         try:
             with open(self.state_path, "w", encoding="utf-8") as fp:
                 json.dump({"seconds": round(self.work_secs),
-                           "stat": self.stat}, fp)
+                           "stat": self.stat, "rec": self.rec}, fp)
         except Exception:
             pass
 
+    def _reset_records(self):
+        """새 세션 — 기록 갱신 축하를 처음부터 다시 센다."""
+        self.rec = {"strokes": [], "focus": 0.0}
+        self._rec_prev_run = 0.0
+        self._rec_armed = True
+
     def _timer_reset(self):
         self.work_secs = 0.0
+        self._reset_records()
         self._timer_save()
 
     def _fg_is_work(self, now):
@@ -1847,6 +1904,11 @@ class Mascot:
             return
         if self.bubble and now > self.bubble[1]:
             self.bubble = None
+        if self._update_msg and self.bubble is None and not sleeping:
+            self._say(self._update_msg, 12.0)     # 업데이트 알림 (시작 후 한 번)
+            self._update_msg = None
+            self.next_talk = now + 120
+        self._rec_tick(now, state)
         if (self.bubble is None and now >= self.next_talk
                 and not sleeping and now > self.celebrate_until):
             self._say(random.choice(self._talk_pool(state)))
@@ -1872,6 +1934,50 @@ class Mascot:
                 if p[5] > 0 and p[1] < self.H + 30:
                     alive.append(p)
             self.particles = alive
+
+    STROKE_MARKS = (300, 1000, 3000, 10000)   # 그린 획수 축하 지점
+    FOCUS_MIN = 20 * 60                       # 최장 집중은 20분부터 인정
+    FOCUS_STEP = 60                           # 최소 이만큼은 넘겨야 '갱신'
+
+    def _rec_tick(self, now, state):
+        """기록 갱신 축하 — 그린 획수 돌파 · 이번 세션 최장 집중 갱신."""
+        if not self.fun or self.bubble is not None or now < self.celebrate_until:
+            return
+        if now < self._rec_next or state != "work":
+            return                            # 작업 중일 때만, 그리고 쿨다운 뒤
+        run = float(self.stat.get("_run", 0.0))
+        if run < self._rec_prev_run:          # 집중이 끊겼다 → 다음 구간 준비
+            self._rec_armed = True
+        self._rec_prev_run = run
+
+        strokes = int(self.stat.get("strokes", 0))
+        for mark in self.STROKE_MARKS:
+            if strokes >= mark and mark not in self.rec["strokes"]:
+                self.rec["strokes"].append(mark)
+                self._cheer(f"{mark:,}획 돌파!")
+                return
+        if (self._rec_armed and run >= self.FOCUS_MIN
+                and run > self.rec["focus"] + self.FOCUS_STEP):
+            self.rec["focus"] = run
+            self._rec_armed = False           # 이 구간에서는 한 번만
+            self._cheer(f"최장 집중 갱신! {int(run // 60)}분째")
+
+    def _cheer(self, text):
+        """작업 종료보다 약한 축하 — 말풍선 + 폭죽 조금 (팝업 없음)."""
+        now = time.time()
+        self._rec_next = now + 90             # 연달아 뜨지 않게
+        self._say(text, 4.5)
+        if self.has.get("smile"):
+            self.smile_until = now + 3.0
+        cols = ["#ff9ec4", "#ffd479", "#9ad7ff", "#b8e986", "#c9a7ff"]
+        for _ in range(14):
+            ang = random.uniform(-2.6, -0.55)
+            spd = random.uniform(3.0, 6.5)
+            self.particles.append([self.card_cx + random.uniform(-45, 45),
+                                   self.oy + 46,
+                                   math.cos(ang) * spd, math.sin(ang) * spd,
+                                   random.choice(cols), random.randint(35, 60)])
+        self._timer_save()
 
     def _pick_pets(self):
         """이번에 나올 반려동물 배역 — 2마리면 한 마리씩 또는 둘 다."""
@@ -2055,6 +2161,7 @@ class Mascot:
         self.celebrate_until = now + 4.0
         self.hat_until = now + 14.0
         self.smile_until = now + 5.0            # 말풍선이 떠 있는 동안 웃는 얼굴
+        self._reset_records()                   # 작업 종료 = 이번 '오늘'의 끝
         self._say("수고하셨습니다!", 5.0)
         cols = ["#ff9ec4", "#ffd479", "#9ad7ff", "#b8e986", "#c9a7ff", "#ffa9a9"]
         for _ in range(48):
@@ -2141,6 +2248,7 @@ class Mascot:
             for k in ("work", "other", "idle", "best", "_run", "first", "last"):
                 self.stat[k] = 0.0
             self.stat["keys"] = self.stat["strokes"] = 0
+            self._reset_records()
             self._timer_save()
             win.destroy()
 
