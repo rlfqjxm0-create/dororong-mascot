@@ -1,0 +1,20 @@
+{
+ "name": "도로롱",
+ "scale": 0.34,
+ "screen_quad": [[215, 802], [415, 795], [420, 862], [210, 870]],
+ "blink": null,
+ "trail_color": "#b9aed6",
+ "hard_alpha": true,
+ "timer": {"enabled": true, "idle_sec": 15},
+ "fun": true,
+ "hat_scale": 0.22,
+ "hat_pos": [-52, 62],
+ "card": {
+  "border": "#f0aac6",
+  "text": "#7a6a9e",
+  "sub": "#b59cc0",
+  "track": "#f5eef6",
+  "fill": "#f2a7c5",
+  "deco": "cat"
+ }
+}
