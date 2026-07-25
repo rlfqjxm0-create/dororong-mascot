@@ -40,5 +40,6 @@
   "fill": "#f2a7c5",
   "deco": "cat"
  },
- "pen_grain": true
+ "pen_grain": true,
+ "todo": true
 }
