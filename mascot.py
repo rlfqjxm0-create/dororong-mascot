@@ -3401,9 +3401,13 @@ class Mascot:
                 except Exception:
                     self._ws_data = None
             d = self._ws_data
-            if not d or now - float(d.get("ts", 0)) > 8:
-                # 기존 타이머가 꺼졌다 — 멈추지 말고 캐릭터가 이어서 잰다.
-                # (마지막으로 받은 누적 시간에서 계속 더한다)
+            # 기존 타이머가 꺼졌거나(프로세스 종료), 떠 있어도 '작업 종료' 상태라
+            # 시간을 세지 않는 경우 모두 캐릭터가 이어서 잰다.
+            # (세션이 꺼진 걸 몰라서 아무도 안 세는 사이 작업 시간이 통째로
+            #  사라지던 문제 — 캐릭터 화면에는 옛 누적값이 그대로 보여 더 헷갈렸다)
+            ws_down    = (not d) or (now - float(d.get("ts", 0)) > 8)
+            ws_no_sess = bool(d) and not d.get("session_on", True)
+            if ws_down or ws_no_sess:
                 if not self._ws_lost:
                     self._ws_lost = True
                     self._t_last = now
