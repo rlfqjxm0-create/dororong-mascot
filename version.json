@@ -1,13 +1,13 @@
 {
- "version": 1785447106,
+ "version": 1785449038,
  "files": {
-  "mascot.py": "6928bfd7feeb4d9567fb9b724e2bb91f0eb2f3ebd1198e24d5491683f7cbef87",
+  "mascot.py": "48fa18f2be1f032f8cbf8da2d61b435e63b7bb90392455e0735d1612ecbc8e94",
   "parts_dororong_gift/arm_key.png": "daa3071b33d0d7ed6bc3756c2935b2fbefdafc586e17820cb6ec1071ddf598ba",
   "parts_dororong_gift/arm_pen.png": "457e108fb10fd4d5fd69907a25f849cbadc5e697e501ba39cefc8c656bddca38",
   "parts_dororong_gift/arm_right.png": "4725e2e6e9efbc9936a17d68453fd827ec8c91df46f068c6aa2c6d30f3a96bfe",
   "parts_dororong_gift/arm_right_typing.png": "c7999c8d3a4f7cd7243e7a0932cb1bf916ed116d3cace661ba1a218a6064a18c",
   "parts_dororong_gift/body_open.png": "e4cb273fcc1dca4968e641a3a6dc439a4d6f38153884666a26564b3d1fc172f4",
-  "parts_dororong_gift/config.json": "0287507f6f6c634b1307907788eccc26efa5a3070a86f55f1f0e65cb6b4a94f2",
+  "parts_dororong_gift/config.json": "851cb844ee6e73a8d769751bdd417c00015dbc5aab1267677f8ac2b008911ca0",
   "parts_dororong_gift/desk.png": "161ef5b6c5db3e227bcbaa28b8b7af242240030692a69563b382898f31b31450",
   "parts_dororong_gift/eyes_closed.png": "b6350768e0bd559b4fcfa6dabca3f276fd13fde084df1519268358bd493927f0",
   "parts_dororong_gift/hair.png": "1b54be528ccd6eb3a7dffc00086292cdb25584c1b8e95105feeb1c5b9b661b83",
@@ -95,7 +95,11 @@
   "parts_dororong_gift/sounds/tealios-v2_Akira/tab.wav": "0718e9c5b1311b80d3337617d28667297eee897fa56d3d5a1174b94071fbcbf6"
  },
  "notes": [
-  "작업 종료 브리핑에 캐릭터 이름과 날짜가 표시됩니다.",
-  "어제 대비와 연속 일수가 잘못 세어지던 문제를 고쳤습니다."
+  "환경설정 아래에서 건의 사항과 버그를 바로 보낼 수 있어요. 불편한 점이나 있었으면 하는 기능을 적어 주세요.",
+  "마감을 말풍선으로 등록할 수 있어요. 캐릭터 우클릭 → 마감 추가. 여러 개 넣을 수 있고 날짜가 가까우면 색이 바뀝니다.",
+  "할 일·마감 말풍선은 끌어서 옮기고, 우클릭으로 수정·삭제·크기 조절을 합니다.",
+  "캐릭터가 상황에 따라 움직입니다 — 인사, 박수, 기지개, 고개짓, 리듬 타기.",
+  "20분마다 기지개를 켜며 스트레칭을 권합니다. 캐릭터를 한 번 눌러야 꺼집니다.",
+  "작업 종료 브리핑에 어제 대비·최근 7일·연속 일수와 캐릭터 이름·날짜가 나옵니다."
  ]
 }
