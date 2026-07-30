@@ -95,5 +95,12 @@
   "키 커진 것 같아.",
   "몸이 펴졌다."
  ],
- "stretch_hint_suffix": " — 눌러줘"
+ "stretch_hint_suffix": " — 눌러줘",
+ "remember_pos": true,
+ "history": true,
+ "deadline_on": true,
+ "goal_cheer": true,
+ "save_card": true,
+ "soft_overlay": true,
+ "pen_monitor_pick": true
 }
