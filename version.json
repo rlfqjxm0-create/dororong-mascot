@@ -1,13 +1,13 @@
 {
- "version": 1785584597,
+ "version": 1785591686,
  "files": {
-  "mascot.py": "d2cea3d1c81494328410e73904bf53fa5b9ca1ffa702c46f7d35783a110c305a",
+  "mascot.py": "faa19b989baac6dcb363838ceae6d2bc0d0744980ca0047f6b6df02626eddf09",
   "parts_dororong_gift/arm_key.png": "daa3071b33d0d7ed6bc3756c2935b2fbefdafc586e17820cb6ec1071ddf598ba",
   "parts_dororong_gift/arm_pen.png": "457e108fb10fd4d5fd69907a25f849cbadc5e697e501ba39cefc8c656bddca38",
   "parts_dororong_gift/arm_right.png": "4725e2e6e9efbc9936a17d68453fd827ec8c91df46f068c6aa2c6d30f3a96bfe",
   "parts_dororong_gift/arm_right_typing.png": "c7999c8d3a4f7cd7243e7a0932cb1bf916ed116d3cace661ba1a218a6064a18c",
   "parts_dororong_gift/body_open.png": "e4cb273fcc1dca4968e641a3a6dc439a4d6f38153884666a26564b3d1fc172f4",
-  "parts_dororong_gift/config.json": "f98cf3cc03af53ad8211df0346a7240754930b1d7a66149a5eff6c5ae5dc8920",
+  "parts_dororong_gift/config.json": "ede398aaa5fff598cd8a46745e31041536a154646ee8e30bcb30522c5e34f6ec",
   "parts_dororong_gift/desk.png": "161ef5b6c5db3e227bcbaa28b8b7af242240030692a69563b382898f31b31450",
   "parts_dororong_gift/eyes_closed.png": "b6350768e0bd559b4fcfa6dabca3f276fd13fde084df1519268358bd493927f0",
   "parts_dororong_gift/hair.png": "1b54be528ccd6eb3a7dffc00086292cdb25584c1b8e95105feeb1c5b9b661b83",
@@ -94,5 +94,8 @@
   "parts_dororong_gift/sounds/tealios-v2_Akira/space.wav": "b47b8e94ff0882a8793322ea6275d6447d9bc7f8de2a88791c9631d1164426ba",
   "parts_dororong_gift/sounds/tealios-v2_Akira/tab.wav": "0718e9c5b1311b80d3337617d28667297eee897fa56d3d5a1174b94071fbcbf6"
  },
- "notes": []
+ "notes": [
+  "모션이 추가되었어요.",
+  "움직일 때 선이 거칠어지던 것을 고쳤어요."
+ ]
 }
