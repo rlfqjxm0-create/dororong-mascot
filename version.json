@@ -1,7 +1,7 @@
 {
- "version": 1785792358,
+ "version": 1785884339,
  "files": {
-  "mascot.py": "21b7f08b248e64ebb8da9a491387d88601c8257d9a1edeac9c32fec63b5a8487",
+  "mascot.py": "9c046beca3f34af773e79e314ac143429f07278b69874717db071b222f87c059",
   "parts_dororong_gift/arm_key.png": "daa3071b33d0d7ed6bc3756c2935b2fbefdafc586e17820cb6ec1071ddf598ba",
   "parts_dororong_gift/arm_pen.png": "457e108fb10fd4d5fd69907a25f849cbadc5e697e501ba39cefc8c656bddca38",
   "parts_dororong_gift/arm_right.png": "4725e2e6e9efbc9936a17d68453fd827ec8c91df46f068c6aa2c6d30f3a96bfe",
@@ -170,6 +170,7 @@
   "parts_dororong_gift/sounds/tealios-v2_Akira/tab.wav": "0718e9c5b1311b80d3337617d28667297eee897fa56d3d5a1174b94071fbcbf6"
  },
  "notes": [
-  "캐릭터를 작게 쓸 때 고개를 돌리면 머리만 옆으로 어긋나던 문제를 고쳤어요."
+  "오래 켜 두어도 메모리를 덜 쓰도록 다듬었어요.",
+  "일시적인 문제로 캐릭터 일부가 잠깐 안 보이면 스스로 되돌아오게 했어요."
  ]
 }
