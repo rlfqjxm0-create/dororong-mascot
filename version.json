@@ -1,7 +1,7 @@
 {
- "version": 1786834733,
+ "version": 1786836857,
  "files": {
-  "mascot.py": "05ab15e2503d393d6981134286139f6c9cb2d733cc9f833118bc672000997468",
+  "mascot.py": "d41e2f26686a3096a1cb9c600e02dede82ade40dbf8622e6a5ad4faf5b142dd2",
   "parts_dororong_gift/arm_key.png": "daa3071b33d0d7ed6bc3756c2935b2fbefdafc586e17820cb6ec1071ddf598ba",
   "parts_dororong_gift/arm_pen.png": "457e108fb10fd4d5fd69907a25f849cbadc5e697e501ba39cefc8c656bddca38",
   "parts_dororong_gift/arm_right.png": "4725e2e6e9efbc9936a17d68453fd827ec8c91df46f068c6aa2c6d30f3a96bfe",
@@ -11,6 +11,7 @@
   "parts_dororong_gift/desk.png": "161ef5b6c5db3e227bcbaa28b8b7af242240030692a69563b382898f31b31450",
   "parts_dororong_gift/eyes_closed.png": "b6350768e0bd559b4fcfa6dabca3f276fd13fde084df1519268358bd493927f0",
   "parts_dororong_gift/hair.png": "1b54be528ccd6eb3a7dffc00086292cdb25584c1b8e95105feeb1c5b9b661b83",
+  "parts_dororong_gift/hand.png": "14fcba700a6266576b2d5a5e8d6aa308f53ff0d00008e93ee51526d08eec067f",
   "parts_dororong_gift/hat.png": "4bd1da80b760cff3694c7b21350e8dce6a177026846dcd737d796ad7560f277f",
   "parts_dororong_gift/head.png": "a8cd014f2b07c2865cb6081b4e767ac8c8d590adbfc8579211216d9474d5a170",
   "parts_dororong_gift/lashes.png": "02852ca9f2c478ae02930089473e0ceef9813748fd586bfa374c1e0435f0e5a7",
@@ -280,8 +281,6 @@
   "stickers/__init__.py": "d77e3dc92cb353dced8d192c140643c6458bc3901facdf2e0a0d0830fa4244b7",
   "youtube_player.py": "33dd7fc8cf781b8b8a37c1a60a54b7506ebce5b44399d28fc0841d143d19e70c"
  },
- "notes": [
-  "타이머 안정성",
-  "소품 추가"
- ]
+ "notes": [],
+ "silent": true
 }
