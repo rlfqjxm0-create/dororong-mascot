@@ -1,7 +1,7 @@
 {
- "version": 1786960692,
+ "version": 1786961670,
  "files": {
-  "mascot.py": "347ee98b47114e50791765d6a585d1248761d4c12713c6b1c20c63669d183fe4",
+  "mascot.py": "64339ffcf8075294eac342881e58a631fa61f2b53a6f66427c59ae4e5c0f3aea",
   "parts_dororong_gift/arm_key.png": "daa3071b33d0d7ed6bc3756c2935b2fbefdafc586e17820cb6ec1071ddf598ba",
   "parts_dororong_gift/arm_pen.png": "457e108fb10fd4d5fd69907a25f849cbadc5e697e501ba39cefc8c656bddca38",
   "parts_dororong_gift/arm_right.png": "4725e2e6e9efbc9936a17d68453fd827ec8c91df46f068c6aa2c6d30f3a96bfe",
@@ -24,6 +24,11 @@
   "parts_dororong_gift/seat_pen.png": "99e9dd65da59f43bd9ea845df3c6b651ec1fb288f838f5c53938e0baf6ff503a",
   "parts_dororong_gift/seat_pen2.png": "0efd261d05d9a46f76d5a3fa0e94c7fb9b510feefd6ac29e274006d5b7885764",
   "parts_dororong_gift/seat_type.png": "618653bf13dfdc7469fa5912f505493d0737f54003fd9c535c92c3b050b4c78e",
+  "parts_dororong_gift/sky_dawn.png": "588c23959f0f6af3c8a5f75fb7eb14ed64d4e8ed567b04bddcf9c2592726c2c1",
+  "parts_dororong_gift/sky_day.png": "8c836f9d19bfde652386227be759bd3cea9ead31c54f35c46eb639a74502445e",
+  "parts_dororong_gift/sky_dusk.png": "357d5a58d58536cd07f06f291be1ea7be6866846a7b83c985a0bcd9af833f321",
+  "parts_dororong_gift/sky_morning.png": "08a2cacc410e1cabe61815bc6601ec4a56265ca792b6f37d247ef597ef89099b",
+  "parts_dororong_gift/sky_night.png": "f762dc17a481c603d8bc1d76f594ace20551e2aab850bfda9cd631f57731ad84",
   "parts_dororong_gift/fonts/Pretendard-Bold.otf": "2e91915fab54df71cc9598ebf608b2bdb54c6fe3c066ac61dff0bc44fca71cc7",
   "parts_dororong_gift/fonts/Pretendard-Regular.otf": "3ffbacde6ab8411f1d2db54bb9b1f0b3ee2a738932033722cf0388c06aed1c93",
   "parts_dororong_gift/snacks/apple.png": "1b07368fb7e1ff3141b29e726727d47b1f369c962ea3635af5239bb7fa9ae01e",
