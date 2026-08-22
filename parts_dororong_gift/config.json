@@ -22,6 +22,7 @@
  "blink": null,
  "trail_color": "#b9aed6",
  "hard_alpha": true,
+ "smooth_body": true,
  "timer": {
   "enabled": true,
   "idle_sec": 15
