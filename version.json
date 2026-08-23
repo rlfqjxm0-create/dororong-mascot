@@ -1,7 +1,7 @@
 {
- "version": 1787511766,
+ "version": 1787512750,
  "files": {
-  "mascot.py": "bd15c0d059d06a72ecca5256dc71b3d37c21aa7d0ca9f5808b1b5726e9ed2e27",
+  "mascot.py": "b4a1eb38effc24f89b487b2f0318d1903fa57ebf518b3dc35c0b9d9899f48905",
   "parts_dororong_gift/arm_key.png": "1a20520a92e7fba220c28198abe91cc991e14c42b8605da6692dd7c5a356bb49",
   "parts_dororong_gift/arm_pen.png": "457e108fb10fd4d5fd69907a25f849cbadc5e697e501ba39cefc8c656bddca38",
   "parts_dororong_gift/arm_right.png": "424b5670203314be96a4332ed79fe911b1f58c094f44452b67b7257019154d5e",
@@ -490,8 +490,6 @@
   "parts_dororong/seat_meta.json": "8c0ae9658f49eb76a991029b7788f4bd04dcc36ae038e55475b601fab6ad108e",
   "parts_dororong/wg_head.png": "ce59b9054cd073f72e1338372e9d60a959a0bbac3582150ea0115520a65b3c4f"
  },
- "notes": [
-  "새 기능 '상태 칩' — 캐릭터 우클릭 → 상태 칩에서 지금 무엇을 하는 중인지 고를 수 있어요. 자리비움 · 게임 중 · 영화 감상 중 · 밥 먹는 중을 고르면 캐릭터가 그 행동을 하고, 홈의 내 칸에도 표시돼요. 원래대로 돌리려면 '온라인'을 고르면 돼요.",
-  "소품이 팔에 가려지지 않게 위로 올렸어요. 여러 겹으로 된 소품(불꽃 같은 것)도 안쪽 겹까지 제대로 나와요."
- ]
+ "notes": [],
+ "silent": true
 }
