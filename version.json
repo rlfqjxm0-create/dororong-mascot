@@ -1,7 +1,7 @@
 {
- "version": 1787691690,
+ "version": 1787692652,
  "files": {
-  "mascot.py": "fbbd51154d02b797fd8c4927f73b974fc08c82657ef60526e60ec725b2f1ec99",
+  "mascot.py": "1ce37ec906567ae0321bdd1b51a9f301e71ebc98c2781078f185015fb326c31a",
   "parts_dororong_gift/arm_key.png": "1a20520a92e7fba220c28198abe91cc991e14c42b8605da6692dd7c5a356bb49",
   "parts_dororong_gift/arm_pen.png": "457e108fb10fd4d5fd69907a25f849cbadc5e697e501ba39cefc8c656bddca38",
   "parts_dororong_gift/arm_right.png": "424b5670203314be96a4332ed79fe911b1f58c094f44452b67b7257019154d5e",
@@ -22,7 +22,7 @@
   "parts_dororong_gift/hat.png": "4bd1da80b760cff3694c7b21350e8dce6a177026846dcd737d796ad7560f277f",
   "parts_dororong_gift/head.png": "532da0f47761f37daf21dfc9fce1c62692e898fd46821b3c4948b2621912a4eb",
   "parts_dororong_gift/lashes.png": "02852ca9f2c478ae02930089473e0ceef9813748fd586bfa374c1e0435f0e5a7",
-  "parts_dororong_gift/layout.json": "eccd5ded107a95d011b503a9fe431e489011edbc869ddec62fb12bdcba2f8d47",
+  "parts_dororong_gift/layout.json": "3fb2300abf9493977dd7062e73b6386953e456e7d31fe6ec066069b69e7e8a4f",
   "parts_dororong_gift/prop1.png": "604566604dee2bf7df4f4de07a65ce1a3854de63e22daed59f40552144f6b9fe",
   "parts_dororong_gift/prop10_back.png": "a5e82549294a330462006c572c8fda2ee6dd60ffacf89d84a48d847b2de479dd",
   "parts_dororong_gift/prop11.png": "5018d089066acf04ff2118046d99d1112eacb9819345988f562674b49035022f",
@@ -44,14 +44,16 @@
   "parts_dororong_gift/prop21.png": "66a57bddeeba14b6b5a426b4e2baf9c9d511cbb1091df36fee374157c362adaa",
   "parts_dororong_gift/prop21_bit2.png": "d58d2e52c560028a8d2fbd72607d300e4497ab90c74b6f151f75c4ba9e39f840",
   "parts_dororong_gift/prop21_bit3.png": "a57385959d741788e857aa42d6234573f4b9abba5b57840da59cc4e0ec120159",
-  "parts_dororong_gift/prop22.png": "b26dd34d646c4068f40bd269b7945f7b5284b4b4f7fe9b2b484208538bf5e8ab",
-  "parts_dororong_gift/prop23.png": "cf769eca40317e3773169fa2517de954f3a13e1e8d8671ed0107f947c547da7d",
+  "parts_dororong_gift/prop22.png": "8eac09362f36184522a6c101efdadb84804ca09afcc63c5fb7df55e6b63282bf",
+  "parts_dororong_gift/prop23.png": "510bc2e7f91d5b4c447b0bdbe01e41602f4b38f12cfb4bcae6bc1b9a58869642",
   "parts_dororong_gift/prop24.png": "3c05924387a38a551ff2f70092849c0a2224b8c9efd2cf6243b477a6d17cb34a",
   "parts_dororong_gift/prop24_bit2.png": "35125f966680406f308a83ba206196b3ab877ea50956b5dba5462acdf21f1c13",
   "parts_dororong_gift/prop25.png": "fa2b0bd486e87df1e54316f78d9c219874aa9fc0fe3fc47c8e38f8cdfaa1832b",
   "parts_dororong_gift/prop25_bit2.png": "0c164a75abb81b157a715c8e560c01331b7256b3f34202c0971183fb6a2dc425",
   "parts_dororong_gift/prop25_bit3.png": "f28b0164c2cc2817a54c3a1f952e18f3dd869695a2c9814b913311cace9a413b",
   "parts_dororong_gift/prop25_bit4.png": "2f7bdf483649d9e2e412f893591ed376924c236b5c8ff94ec4703d5be9d7c029",
+  "parts_dororong_gift/prop26.png": "5760805bcb8a9e0ed81a131b4ce5cd6fcb667c4fc2cf75abaf154b43713f6f62",
+  "parts_dororong_gift/prop27.png": "b75a9b414a5063ff9840f12085ee799086948d6506b35dd2db90b80e113b9821",
   "parts_dororong_gift/prop3.png": "f1d7f8b7c2874307959dbc7a0cae390dee26a996ebe677b29127acc9c12c3421",
   "parts_dororong_gift/prop4.png": "b698b1a5c4ab0057d9b03cbc9559d0529336c770a6f05e0d59db15d79ad49b53",
   "parts_dororong_gift/prop5.png": "0f9bc5b99e9274eb7fe6afe0a488b2d65e34407b9a41a2f5c6016a738855c3e4",
@@ -496,7 +498,6 @@
   "parts_dororong/seat_meta.json": "8c0ae9658f49eb76a991029b7788f4bd04dcc36ae038e55475b601fab6ad108e",
   "parts_dororong/wg_head.png": "ce59b9054cd073f72e1338372e9d60a959a0bbac3582150ea0115520a65b3c4f"
  },
- "notes": [
-  "새 소품 4종이 왔어요 — 잠자는 고양이(가끔 눈을 뜨고 빤히 봐요), 김이 폴폴 나는 왕만두, 아기 쪽쪽이, 토끼 머리띠. '소품 새로고침'을 누르다 보면 만날 수 있어요."
- ]
+ "notes": [],
+ "silent": true
 }
