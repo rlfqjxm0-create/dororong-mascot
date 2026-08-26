@@ -1,7 +1,7 @@
 {
- "version": 1787709799,
+ "version": 1787716005,
  "files": {
-  "mascot.py": "018be95a9e3a5d7bb3d8bd20d600d438dc46a9ad7d7710fb8a518fa457c6946c",
+  "mascot.py": "5efb6f5198fe437b2ecbe25ecc283968d6357e03c0184e4e2d104530b016cd86",
   "parts_dororong_gift/arm_key.png": "1a20520a92e7fba220c28198abe91cc991e14c42b8605da6692dd7c5a356bb49",
   "parts_dororong_gift/arm_pen.png": "457e108fb10fd4d5fd69907a25f849cbadc5e697e501ba39cefc8c656bddca38",
   "parts_dororong_gift/arm_right.png": "424b5670203314be96a4332ed79fe911b1f58c094f44452b67b7257019154d5e",
@@ -22,7 +22,7 @@
   "parts_dororong_gift/hat.png": "4bd1da80b760cff3694c7b21350e8dce6a177026846dcd737d796ad7560f277f",
   "parts_dororong_gift/head.png": "532da0f47761f37daf21dfc9fce1c62692e898fd46821b3c4948b2621912a4eb",
   "parts_dororong_gift/lashes.png": "02852ca9f2c478ae02930089473e0ceef9813748fd586bfa374c1e0435f0e5a7",
-  "parts_dororong_gift/layout.json": "3fb2300abf9493977dd7062e73b6386953e456e7d31fe6ec066069b69e7e8a4f",
+  "parts_dororong_gift/layout.json": "ce0c5b911c4ade04f5c73e0977a0c1f43147821e8e2c10efd6299d22152ee394",
   "parts_dororong_gift/prop1.png": "604566604dee2bf7df4f4de07a65ce1a3854de63e22daed59f40552144f6b9fe",
   "parts_dororong_gift/prop10_back.png": "a5e82549294a330462006c572c8fda2ee6dd60ffacf89d84a48d847b2de479dd",
   "parts_dororong_gift/prop11.png": "5018d089066acf04ff2118046d99d1112eacb9819345988f562674b49035022f",
@@ -54,6 +54,11 @@
   "parts_dororong_gift/prop25_bit4.png": "2f7bdf483649d9e2e412f893591ed376924c236b5c8ff94ec4703d5be9d7c029",
   "parts_dororong_gift/prop26.png": "5760805bcb8a9e0ed81a131b4ce5cd6fcb667c4fc2cf75abaf154b43713f6f62",
   "parts_dororong_gift/prop27.png": "b75a9b414a5063ff9840f12085ee799086948d6506b35dd2db90b80e113b9821",
+  "parts_dororong_gift/prop28.png": "0623ae7ef9cf2f1d8e09cc38a6fc7996dd99e704eba952b1bf7d020a0a4af3ca",
+  "parts_dororong_gift/prop28_bit2.png": "bf709c405dd3646e25078c14e0c0185b32d51d008d2f4d247a727663657076c2",
+  "parts_dororong_gift/prop28_bit3.png": "a446caddc6262d840177bb9c87e348c7b7a569abe2b73b64b6691c94d498f7e2",
+  "parts_dororong_gift/prop28_bit4.png": "1c1d6a8de0f192ed291fd2814e388eb86a8dd693eb85c040d02b27764e9b2dc8",
+  "parts_dororong_gift/prop28_bit5.png": "b2dc2fd51169e81784830a39858112a80a54b4308fc6e0d7a5fd8b04f089a6a5",
   "parts_dororong_gift/prop3.png": "f1d7f8b7c2874307959dbc7a0cae390dee26a996ebe677b29127acc9c12c3421",
   "parts_dororong_gift/prop4.png": "b698b1a5c4ab0057d9b03cbc9559d0529336c770a6f05e0d59db15d79ad49b53",
   "parts_dororong_gift/prop5.png": "0f9bc5b99e9274eb7fe6afe0a488b2d65e34407b9a41a2f5c6016a738855c3e4",
@@ -507,6 +512,10 @@
   "parts_dororong/seat_meta.json": "8c0ae9658f49eb76a991029b7788f4bd04dcc36ae038e55475b601fab6ad108e",
   "parts_dororong/wg_head.png": "ce59b9054cd073f72e1338372e9d60a959a0bbac3582150ea0115520a65b3c4f"
  },
- "notes": [],
- "silent": true
+ "notes": [
+  "새 소품 4종이 왔어요 — 잠자는 고양이, 김이 폴폴 나는 왕만두, 아기 쪽쪽이, 토끼 머리띠. '소품 새로고침'을 누르다 보면 만날 수 있어요.",
+  "고양이를 클릭하면 야옹 하고 울어요. 고양이 머리를 살살 쓰다듬으면(드래그) 고롱고롱 소리를 내요.",
+  "모두의 플레이리스트에서 퍼오기가 막혀 건너뛰던 곡도 이제 재생돼요. 유튜브 프리미엄을 쓰신다면 음악 메뉴에서 한 번 로그인해 두면 광고 없이 나와요.",
+  "하독의 반려동물 고양이 비비도 있어요! 발과 꼬리를 살랑이는 비비를 클릭하거나 몸을 쓰다듬어 보세요."
+ ]
 }
