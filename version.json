@@ -1,7 +1,7 @@
 {
- "version": 1788092152,
+ "version": 1788186196,
  "files": {
-  "mascot.py": "bd1b61cdbbb0194d29bd5af7e9e6e11a074d7c43c0f38ba253232dd5814f3b4e",
+  "mascot.py": "96558e458abafb489796240fd15f270797af18ec00a48158a957568f9f5ef9a8",
   "parts_dororong_gift/arm_key.png": "1a20520a92e7fba220c28198abe91cc991e14c42b8605da6692dd7c5a356bb49",
   "parts_dororong_gift/arm_pen.png": "457e108fb10fd4d5fd69907a25f849cbadc5e697e501ba39cefc8c656bddca38",
   "parts_dororong_gift/arm_right.png": "424b5670203314be96a4332ed79fe911b1f58c094f44452b67b7257019154d5e",
@@ -535,6 +535,9 @@
   "parts_dororong/seat_meta.json": "8c0ae9658f49eb76a991029b7788f4bd04dcc36ae038e55475b601fab6ad108e",
   "parts_dororong/wg_head.png": "ce59b9054cd073f72e1338372e9d60a959a0bbac3582150ea0115520a65b3c4f"
  },
- "notes": [],
- "silent": true
+ "notes": [
+  "9월 1일 0시에 '월말정산'이 열려요 — 8월 한 달 동안 얼마나 그렸는지, 방 친구들 시상식까지 영수증 한 장으로 보여드려요 (홈 메뉴에 생깁니다)",
+  "그때 안 켜져 있어도 괜찮아요 — 다음에 타이머를 켜면 지난달 정산이 저절로 한 번 떠요",
+  "이번 업데이트를 받으려면 타이머를 껐다 켜 주세요 (켜 둔 채로는 새 기능이 안 들어와요)"
+ ]
 }
