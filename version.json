@@ -1,7 +1,7 @@
 {
- "version": 1788267801,
+ "version": 1788274781,
  "files": {
-  "mascot.py": "d02132c249a1e15d90e59874c0ac189108ae598dcd7c568e30b7fe6fd4a2d7c3",
+  "mascot.py": "3a840eca79305ba316b51c43e480ee507e13d4434fbb4d48d4217c271c83709e",
   "parts_dororong_gift/arm_key.png": "1a20520a92e7fba220c28198abe91cc991e14c42b8605da6692dd7c5a356bb49",
   "parts_dororong_gift/arm_pen.png": "457e108fb10fd4d5fd69907a25f849cbadc5e697e501ba39cefc8c656bddca38",
   "parts_dororong_gift/arm_right.png": "424b5670203314be96a4332ed79fe911b1f58c094f44452b67b7257019154d5e",
@@ -537,7 +537,6 @@
   "parts_dororong/seat_meta.json": "8c0ae9658f49eb76a991029b7788f4bd04dcc36ae038e55475b601fab6ad108e",
   "parts_dororong/wg_head.png": "ce59b9054cd073f72e1338372e9d60a959a0bbac3582150ea0115520a65b3c4f"
  },
- "notes": [
-  "하루에 보낼 수 있는 편지가 10통에서 30통으로 늘었어요!"
- ]
+ "notes": [],
+ "silent": true
 }
