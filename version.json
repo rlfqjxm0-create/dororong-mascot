@@ -1,7 +1,7 @@
 {
- "version": 1788380374,
+ "version": 1788382595,
  "files": {
-  "mascot.py": "9b0d3a68b6589a336ce75814562ebe6b853cd93d616679fbd44ab5f673d34871",
+  "mascot.py": "82f7fb45dd6a4fe3331968674aa51807f02cb10b4d18fc1f3142f0233b3d5d9d",
   "parts_dororong_gift/arm_key.png": "1a20520a92e7fba220c28198abe91cc991e14c42b8605da6692dd7c5a356bb49",
   "parts_dororong_gift/arm_pen.png": "457e108fb10fd4d5fd69907a25f849cbadc5e697e501ba39cefc8c656bddca38",
   "parts_dororong_gift/arm_right.png": "424b5670203314be96a4332ed79fe911b1f58c094f44452b67b7257019154d5e",
@@ -537,6 +537,9 @@
   "parts_dororong/seat_meta.json": "8c0ae9658f49eb76a991029b7788f4bd04dcc36ae038e55475b601fab6ad108e",
   "parts_dororong/wg_head.png": "ce59b9054cd073f72e1338372e9d60a959a0bbac3582150ea0115520a65b3c4f"
  },
- "notes": [],
+ "notes": [
+  "같이하기에서 친구가 '오늘은 여기까지'를 누르면 그 캐릭터 왼쪽에 '오늘은 여기까지 할게요, 모두 화이팅!' 말풍선이 크게 뜨고 손을 흔들다가, 2초쯤 뒤 캐릭터와 함께 스르르 사라져요 — 뽀모도로 창과 바탕화면 띠 양쪽에서",
+  "같이하기 사이클을 끝까지 돌아 멈추면 부른 사람 창에 '다시 시작' 단추가 떠서 이어서 같이 돌릴 수 있어요"
+ ],
  "silent": true
 }
