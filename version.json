@@ -1,7 +1,7 @@
 {
- "version": 1788481929,
+ "version": 1788482971,
  "files": {
-  "mascot.py": "df9304fcba198b8ba0e520635273c922b9468d6129184dd763d2bd25c504e476",
+  "mascot.py": "db077818a2561c32605e9ea9c5937501699ebc5fec1a6e24514aa3d791be0610",
   "parts_dororong_gift/arm_key.png": "1a20520a92e7fba220c28198abe91cc991e14c42b8605da6692dd7c5a356bb49",
   "parts_dororong_gift/arm_pen.png": "457e108fb10fd4d5fd69907a25f849cbadc5e697e501ba39cefc8c656bddca38",
   "parts_dororong_gift/arm_right.png": "424b5670203314be96a4332ed79fe911b1f58c094f44452b67b7257019154d5e",
@@ -543,9 +543,6 @@
   "parts_dororong/seat_meta.json": "8c0ae9658f49eb76a991029b7788f4bd04dcc36ae038e55475b601fab6ad108e",
   "parts_dororong/wg_head.png": "ce59b9054cd073f72e1338372e9d60a959a0bbac3582150ea0115520a65b3c4f"
  },
- "notes": [
-  "우클릭 메뉴가 캐릭터 타이머 뒤로 가려지던 것을 고쳤어요 (바로 앞 업데이트에서 생긴 문제예요)",
-  "'업데이트 소식' 창이 할 일·마감 말풍선 뒤에서 깜빡이며 가려지던 것을 고쳤어요 — 이제 늘 앞에 있어요",
-  "채찍질을 다시 보낼 수 있는 간격이 5분에서 1분으로 줄었어요"
- ]
+ "notes": [],
+ "silent": true
 }
