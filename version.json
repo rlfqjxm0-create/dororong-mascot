@@ -1,7 +1,7 @@
 {
- "version": 1788739186,
+ "version": 1788756633,
  "files": {
-  "mascot.py": "f0ce1e07be16a9a3edef6cebeb677bcf636f4512b6a71361dd8a613f7d436607",
+  "mascot.py": "2138b00f2dd3bdebc0d64ddabd23854c7ac9c4ab4dd7c395c3460e0a2362a0c4",
   "parts_dororong_gift/arm_key.png": "1a20520a92e7fba220c28198abe91cc991e14c42b8605da6692dd7c5a356bb49",
   "parts_dororong_gift/arm_pen.png": "457e108fb10fd4d5fd69907a25f849cbadc5e697e501ba39cefc8c656bddca38",
   "parts_dororong_gift/arm_right.png": "424b5670203314be96a4332ed79fe911b1f58c094f44452b67b7257019154d5e",
@@ -13,7 +13,7 @@
   "parts_dororong_gift/chip_meta.json": "19d1e6c8695852c7445dbb541df4050fb3d0ca7eb0fcbfb71f30cd96c3c757d2",
   "parts_dororong_gift/chip_movie.png": "43bfa1493af45a8adc05b455acda466b56cad4394229cd8a706ae5cde09ed642",
   "parts_dororong_gift/chip_spoon.png": "9c1f69af5de27a78fcff161bc8cacbe21aa3ce8cc5b8ea8294517ae23925f08f",
-  "parts_dororong_gift/config.json": "5a572c0bc3c02842fa1d8c469ad7c50cb096cf41662165c0488d3f8e3c312bc3",
+  "parts_dororong_gift/config.json": "bf18ffce24fb70c9c8700efded760ef39192de37ec7bf6d7ce471894b170136d",
   "parts_dororong_gift/config.json.bak": "459cd4664d3c4ea7a8fdbe49ca14272fd3d584d43a2a905b8f998f36041b6e09",
   "parts_dororong_gift/crown.png": "b1b7426a0222ac294a782cb06db6c9c4aba4e660591dd1761dc9e4da050175fc",
   "parts_dororong_gift/desk.png": "161ef5b6c5db3e227bcbaa28b8b7af242240030692a69563b382898f31b31450",
@@ -544,11 +544,7 @@
   "parts_dororong/wg_head.png": "ce59b9054cd073f72e1338372e9d60a959a0bbac3582150ea0115520a65b3c4f"
  },
  "notes": [
-  "마감 말풍선의 꼬리 방향·자리가 날이 바뀌거나 다시 켜도 그대로예요 (전에는 D-3 → D-2 로 바뀌며 초기화됐어요)",
-  "바탕화면 친구들(띠)을 우클릭하면 '현재 위치 고정' — 켜면 끌어도 안 움직여요",
-  "사해(도로롱 폼)의 앉은 모습에 고양이가 남아 보이던 것을 고쳤어요 (그림을 다시 올렸어요)",
-  "뽀모도로 창 ✿ 메뉴에 '소리 조절' — 알림음마다 게이지로 크기를 맞추고 바로 들어볼 수 있어요 (기본은 더 크게)",
-  "플레이리스트에 정지(■) 단추 — 누르면 재생기가 꺼지고 타이머 위 재생 줄도 사라져요 (환경음이 켜져 있어도)",
-  "같이하기 중에 앱을 끄면 이제 친구들 화면에 퇴장 인사(손 흔들기)가 나와요 — 전에는 8분 뒤 조용히 빠졌어요"
+  "환경설정 › 표시 › 테마 '유리' — 타이머 카드·홈·뽀모도로·플레이리스트·쪽지함·환경설정 창이 유리처럼 비쳐요 (윈도우 · 저장하면 다시 켜져요)",
+  "테마가 유리일 때 그 아래 '유리 불투명도' 슬라이더로 유리를 얼마나 비치게 할지 바로 조절할 수 있어요"
  ]
 }
