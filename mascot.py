@@ -7260,6 +7260,9 @@ class RoomNet:
                                          % (len(rows), len(got)))
                     with self._lock:
                         self._roster = got[:ROOM_MAX]
+                    # 명단을 받은 시각 — 받는 쪽이 자리 신호의 나이(age)를
+                    # '지금' 기준으로 고쳐 읽고, 명단이 묵었으면 판단을 쉰다
+                    self.list_at = now
                 if now - t_take >= i_take:
                     t_take = now
                     rows = self._rpc("room_take",
@@ -8437,6 +8440,7 @@ class Mascot:
         self._tm_at = 0.0          # 같이하기 셈을 마지막에 돈 시각
         self._tm_fx = 0.0          # 완주 축하가 시작된 시각
         self._tm_bye = {}          # 퇴장 연출 중인 사람 — slot: (시각, 각오, 상태, 비율)
+        self._tm_fold_at = 0.0     # 방장이 나가 접을 시각 (퇴장 인사를 다 보여 준 뒤)
         self._strip_who = None     # 띠가 마지막으로 그린 사람 목록 (다시 그릴 때만 갱신)
         self._strip_root = None    # 띠를 마지막으로 놓았을 때의 본체 창 자리
         self._strip_sheets = {}    # 띠 시트 캐시 — 열쇠 → (시트, 클릭 자리, 말풍선 자리)
@@ -10715,6 +10719,10 @@ class Mascot:
 
     def _on_press(self, e):
         self._press = (e.x, e.y, e.x_root, e.y_root)
+        # **끌기 흔적은 누르는 순간 지운다.** 뗌(_on_release)은 안 지우고,
+        # 아래 말풍선 분기가 이 줄보다 먼저 돌아가 버려서, 창을 한 번 옮긴
+        # 뒤에는 말풍선 단추를 눌러도 '끌었다'로 읽혀 무시됐다 (편지 제보).
+        self._dragged = False
         # 누르면 윈도우가 본체 창을 맨 앞으로 올려 몸 레이어가 뒤로 밀린다.
         # 되올리는 일은 **어느 분기로 가든** 해야 한다 — 여백 조정 분기가
         # 이걸 건너뛰는 바람에, 다음 프레임의 place_above 가 본체 창에
@@ -10921,14 +10929,31 @@ class Mascot:
             # 눌러야 꺼지는 말풍선 (오늘의 운세) — 머리 위라 '콕 찌르기'와
             # 자리가 겹치므로 그보다 먼저 본다.
             hb = getattr(self, "_bubble_box", None)
-            if (self._bubble_hold and self.bubble
+            # **단추 자리는 빼고 본다.** 몸통 상자가 단추까지 덮고 있어서
+            # 이 검사가 먼저 돌면 단추를 눌러도 말풍선만 닫히고 할 일이
+            # 안 불렸다 (제보: 편지 말풍선 '열어 보기'를 눌러도 쪽지함이
+            # 안 열리고 책상 봉투를 눌러야 열렸다).
+            bbtn9 = getattr(self, "_bubble_btn", None)
+            on_btn9 = bool(getattr(self, "_bubble_act", None) and bbtn9
+                           and bbtn9[0] <= px <= bbtn9[2]
+                           and bbtn9[1] <= py <= bbtn9[3])
+            if (self._bubble_hold and self.bubble and not on_btn9
                     and self.bubble[0] == self._bubble_hold
                     and hb and hb[0] <= px <= hb[2] and hb[1] <= py <= hb[3]):
+                mail9 = bool(getattr(self, "_mail_bub", None)
+                             and self.bubble[0] == self._mail_bub)
                 self.bubble = None
                 self._bubble_hold = None
                 self._bubble_box = None
                 self._bubble_shape = None
+                self._bubble_act = None
+                self._bubble_btn = None
                 self._safe("ui_click", self._ui_click)
+                if mail9:
+                    # 편지 말풍선은 몸통을 눌러도 연다 — 캐릭터 어디를 눌러도
+                    # 여는 약속(_on_press 의 편지 블록)과 같게. 창은 다음 차례로.
+                    self.root.after_idle(
+                        lambda: self._safe("note_open", self._note_open_mail))
                 self._press = None
                 return
             pb = getattr(self, "_pomo_badge", None)
@@ -10939,6 +10964,10 @@ class Mascot:
                 self.bubble = None
                 self._bubble_act = None
                 self._bubble_btn = None
+                # hold 말풍선의 흔적도 같이 걷는다 — 남으면 다음 말이 막힌다
+                self._bubble_hold = None
+                self._bubble_box = None
+                self._bubble_shape = None
                 # 할 일은 **다음 차례로 미룬다.** 여기서 바로 부르면 Tk 가
                 # 클릭을 처리하는 도중에 카드를 헐고 다시 만들게 되어
                 # 프로세스가 통째로 죽는다(실측: 세그폴트). 지뢰 15와 같은
@@ -22877,6 +22906,7 @@ class Mascot:
         self._tm_focus = [0.0, 0.0]
         self._tm_back = 0.0
         self._tm_bye = {}
+        self._tm_fold_at = 0.0
         self._safe("team_hard", self._team_hard_leave)
         self._safe("team_save", self._team_save)
         self._safe("strip_hide", self._strip_hide)
@@ -23005,7 +23035,8 @@ class Mascot:
         bre9 = (0, 0) if fx else self._strip_breath(
             now, self._ui(1) * self._strip_size() / 100.0)
         if (self._strip_key is not None and self._strip_im is not None
-                and who is not None and now - self._strip_at < gap9
+                and who is not None and (who or bye9)
+                and now - self._strip_at < gap9
                 and bre9 == self._strip_bre):
             # 캐릭터가 움직였을 때만 따라간다. **본체가 이미 재 둔 자리**
             # (_last_pos, 한 프레임 전)와 견준다 — 여기서 Tk 에 창 좌표를
@@ -24012,33 +24043,58 @@ class Mascot:
     TEAM_QUIT_WAIT = 2.5         # 끌 때 나감 신호가 서버에 닿기를 기다리는 최대 초
 
     def _team_quit_notify(self):
-        """앱을 끌 때 — 같이하기 참가자면 나감(tmo)을 알리고 닿을 때까지
-        잠깐 기다린다. 통신 스레드는 데몬이라 그냥 끄면 신호를 싣기 전에
-        프로세스가 사라진다. 방장은 안 보낸다 — 방장의 나감은 방을
-        통째로 접는 신호라, 잠깐 끈 것으로 남의 방이 닫히면 안 된다
-        (방장이 오래 안 보이면 TEAM_HOST_GONE 이 접는다).
+        """앱을 끌 때 — 같이하기 중이면 나갔다고 알린다.
+
+        참가자는 나감(tmo), 방장은 '껐어요'(tmx — 방을 접지 않는 퇴장 인사).
+        방장의 tmo 는 방을 통째로 접는 신호라, 잠깐 끈 것으로 남의 방이
+        닫히면 안 된다 (방장이 오래 안 보이면 TEAM_HOST_GONE 이 접는다).
+
+        **통신 스레드를 기다리지 않고 이 자리에서 서버로 보낸다.** 예전에는
+        대기열에 넣고 '대기열이 비었나'로 기다렸는데, 스레드는 대기열을
+        비운 **직후에** 전송(최대 10초)을 하므로 기다리는 쪽이 '다 보냈다'로
+        읽고 곧바로 끝냈다 — 프로세스가 전송 도중에 사라져 퇴장 인사가
+        아무에게도 안 갔다 (제보: 방장 화면에도 연출이 안 보인다).
+        받는 쪽은 이것이 안 와도 자리 신호로 알아챈다 (_team_left_scan).
         """
         tm = self._tm
         net = self.room_net
-        if not tm or net is None or self._team_host():
+        if not tm or net is None:
             return False
         others = [sl for sl in (tm.get("members") or {}) if sl != self.char]
         if not others:
             return False
-        self._team_bcast("tmo", {"i": tm["sid"]})
+        kind9 = "tmx" if self._team_host() else "tmo"
+        x9 = {"i": tm["sid"]}
+        rpc9 = getattr(net, "_rpc", None)
+        room9 = getattr(net, "room", None)
+        if rpc9 is not None and room9 and getattr(net, "key", None) is not None:
+            t0 = time.time()
+            n9 = 0
+            for sl in others:
+                left9 = self.TEAM_QUIT_WAIT - (time.time() - t0)
+                if left9 <= 0.2:
+                    break
+                try:
+                    rpc9("room_send",
+                         {"p_room": room9, "p_to": sl,
+                          "p_blob": _room_seal(net.key, {"f": net.slot,
+                                                          "k": kind9, "x": x9})},
+                         timeout=max(0.5, min(2.0, left9)))
+                    n9 += 1
+                except Exception:
+                    pass
+            return n9 > 0
+        # 통신층이 대기열만 있는 판(검사 stub 등) — 옛 길. 대기열이 비었다고
+        # 끝내지 않는다 (위 설명 — 비운 직후가 전송 중이다).
+        self._team_bcast(kind9, x9)
         t0 = time.time()
         while time.time() - t0 < self.TEAM_QUIT_WAIT:
             try:
                 got = net.take_sent()
             except Exception:
                 got = []
-            if any(str(k9) == "tmo" for _to, k9 in (got or [])):
+            if any(str(k9) == kind9 for _to, k9 in (got or [])):
                 return True
-            if not getattr(net, "_out", None) and not getattr(net, "_kick", False) \
-                    and time.time() - t0 > 0.6:
-                # 보낼 칸이 비었고 깨울 것도 없다 — 이미 나갔거나 못 보내는
-                # 상태다. 더 기다려도 소용없다.
-                break
             time.sleep(0.05)
         return False
 
@@ -24386,6 +24442,14 @@ class Mascot:
                                 % self._note_name(f))
                 return
             self._pomo_redraw()
+        elif k == "tmx":                     # 앱을 껐다 (방장 포함 · 방은 그대로)
+            # 방장이 끈 것이면 방을 접지 않는다 — 다시 켜면 돌아온다
+            # (_team_came_back). 오래 안 보이면 TEAM_HOST_GONE 이 접는다.
+            self._safe("team_bye_start", self._team_bye_start, f)
+            tm["members"].pop(f, None)
+            self._tm_say = ("%s 님이 타이머를 껐어요" % self._note_name(f),
+                            time.time())
+            self._pomo_redraw()
         elif k == "tmbye":                   # 방장이 다 같이 마무리
             if x.get("q"):                   # 대기실을 닫았다 — 축하 없음
                 self._team_fold(note="%s 님이 방을 닫았어요"
@@ -24405,6 +24469,12 @@ class Mascot:
         self._tm_at = now
         if not self._tm:
             return
+        fa9 = float(getattr(self, "_tm_fold_at", 0.0) or 0.0)
+        if fa9 and now >= fa9:
+            # 방장이 방을 끝냈다 — 퇴장 인사를 다 보여 준 뒤에 접는다
+            self._tm_fold_at = 0.0
+            self._team_fold(note="방장이 방을 나갔어요")
+            return
         st = self._pomo()
         tm = self._tm
         sid9 = str(tm["sid"])
@@ -24413,8 +24483,11 @@ class Mascot:
         # 나온다. **내 자리는 뺀다** (검토: 되살린 방의 '아무도 없음' 검사가
         # 내 메아리에 속아 영영 안 접혔다).
         seen9 = {}
+        rows9 = {}                   # 방 번호가 없어도 자리 전부 — 나감 알아채기용
         for q9 in (self.room_people or []):
             sl9 = str(q9.get("slot") or "")
+            if sl9:
+                rows9[sl9] = q9
             b9 = q9.get("tm") if isinstance(q9.get("tm"), dict) else None
             if sl9 and sl9 != self.char and b9 \
                     and str(b9.get("i") or "") == sid9:
@@ -24423,6 +24496,13 @@ class Mascot:
         # 줄어 구간·마무리 신호가 아무에게도 안 가던 것(검토). 참가자도
         # 같이 세워 두면 tmo 로 접을지 판단할 때 쓸 수 있다.
         for sl9, b9 in seen9.items():
+            if (self._team_gone(sl9)
+                    and self._team_came_back(sl9, rows9.get(sl9), now)):
+                # 나간 것으로 봤는데 **그 뒤에** 이 방 번호를 싣고 다시
+                # 알렸다 — 앱을 다시 켰다. 도로 넣는다 (알아챈 퇴장이 틀렸을
+                # 때도 스스로 낫는다).
+                self._tm_gone.pop(sl9, None)
+                self._tm_say = ("%s 님이 돌아왔어요" % self._note_name(sl9), now)
             if sl9 not in tm["members"]:
                 if self._team_gone(sl9):
                     continue             # 방금 나갔다 — 묵은 자리 신호
@@ -24443,6 +24523,10 @@ class Mascot:
                 tm["members"][sl9]["y"] = 1 if b9.get("y") else 0
             if isinstance(tm["members"][sl9], dict):
                 tm["members"][sl9]["seen"] = now     # 자리 신호로 확인됨
+        # 나감 신호가 안 와도 자리 신호로 나간 사람을 알아챈다 (퇴장 연출)
+        self._safe("team_left", self._team_left_scan, now, tm, seen9, rows9)
+        if self._tm is not tm:
+            return
         # **명단은 저절로 줄어들기도 해야 한다.** 예전에는 빼는 길이 '나감
         # 신호(tmo)를 받는 것' 하나뿐이라, 그 신호를 놓치면(맥이 잠들어
         # 있었거나·통신층이 재시작했거나·나간 사람의 명단이 나를 안 담고
@@ -26143,6 +26227,96 @@ class Mascot:
     # 참가자가 '오늘은 여기까지'를 누르면 본인은 바로 나가고, 남은 사람들
     # 화면에서는 그 캐릭터 왼쪽에 큰 말풍선이 뜨고 손을 흔들다가 캐릭터와
     # 함께 옅어져 사라진다. 뽀모도로 창과 바탕화면 띠 양쪽 다.
+    TEAM_LEFT_STALE = 40.0       # 같이하기 중엔 자리 알림이 5초마다 — 이만큼 끊기면 꺼졌다
+    TEAM_LEFT_GRACE = 8.0        # 방 번호가 빠진 자리 신호가 이만큼 이어지면 나갔다
+    TEAM_BACK_MARGIN = 10.0      # 나간 뒤 이만큼 지나 새로 온 자리 신호면 돌아왔다
+    TEAM_LIST_STALE = 20.0       # 명단이 이만큼 묵었으면 나감을 판단하지 않는다
+
+    def _team_list_at(self, now):
+        """명단을 받은 시각 (모르면 None — 검사 stub)."""
+        net = self.room_net
+        got = getattr(net, "list_at", None) if net is not None else None
+        try:
+            return float(got) if got else None
+        except (TypeError, ValueError):
+            return None
+
+    def _team_left_scan(self, now, tm, seen9, rows9):
+        """나감 신호(tmo·tmx)가 안 와도 **자리 신호로** 나간 사람을 알아챈다.
+
+        퇴장 연출이 나가는 쪽의 신호 하나에만 기대서, 앱을 그냥 끄거나
+        튕기거나 신호가 한 번 새면 아무에게도 안 떴다 (제보 — 방장 화면에도).
+        한 번이라도 자리로 확인한 사람(seen)만 본다. 셋 중 하나면 나간 것:
+          · 자리는 새로 오는데 이 방 번호가 빠졌다 (TEAM_LEFT_GRACE 동안)
+          · 자리 신호가 TEAM_LEFT_STALE 넘게 끊겼다 (앱이 꺼졌다)
+          · 명단에서 자리가 아예 사라졌다 (내 자리는 있을 때만)
+        **명단이 묵었으면 판단하지 않는다** — 내 통신이 끊긴 것을 남이
+        나간 것으로 읽으면 안 된다. 나이(age)가 없는 자리도 판단하지 않는다.
+        """
+        la9 = self._team_list_at(now)
+        if la9 is not None and now - la9 > self.TEAM_LIST_STALE:
+            return
+        lag9 = max(0.0, now - la9) if la9 is not None else 0.0
+        mine_ok = self.char in rows9
+        host9 = str(tm.get("host") or "")
+        for sl9 in list(tm.get("members") or {}):
+            d9 = tm["members"].get(sl9)
+            if (sl9 == self.char or not isinstance(d9, dict)
+                    or not d9.get("seen") or self._team_gone(sl9)):
+                continue
+            q9 = rows9.get(sl9)
+            if sl9 in seen9:
+                d9.pop("nosid", None)
+            why = None
+            if q9 is None:
+                if mine_ok and la9 is not None:
+                    why = "gone"
+            elif q9.get("age") is not None:
+                try:
+                    age9 = float(q9.get("age") or 0) + lag9
+                except (TypeError, ValueError):
+                    age9 = 0.0
+                if age9 > self.TEAM_LEFT_STALE:
+                    why = "off"
+                elif sl9 not in seen9:
+                    t9 = d9.get("nosid")
+                    if not t9:
+                        d9["nosid"] = now
+                    elif now - float(t9) >= self.TEAM_LEFT_GRACE:
+                        why = "left"
+            if not why:
+                continue
+            d9.pop("nosid", None)
+            self._safe("team_bye_start", self._team_bye_start, sl9)
+            tm["members"].pop(sl9, None)
+            nm9 = self._note_name(sl9)
+            if sl9 == host9 and not self._team_host() and why == "left":
+                # 방장이 방을 끝냈는데 마무리 신호가 샜다 — 인사를 다 보여
+                # 준 뒤에 접는다 (바로 접으면 연출이 통째로 지워진다)
+                self._tm_fold_at = now + self.TEAM_BYE_HOLD + self.TEAM_BYE_FADE
+                self._tm_say = ("%s 님이 방을 나갔어요" % nm9, now)
+            elif why == "left":
+                self._tm_say = ("%s 님이 오늘 작업을 마쳤어요" % nm9, now)
+            else:
+                self._tm_say = ("%s 님이 타이머를 껐어요" % nm9, now)
+            self._pomo_redraw()
+
+    def _team_came_back(self, slot, q, now):
+        """나간 것으로 본 사람이 **그 뒤에** 자리를 다시 알렸는가.
+
+        자리 신호의 나이(age)는 명단을 받은 때 기준이라 받은 시각에서 빼면
+        그 신호를 보낸 때가 된다. 그것이 나간 때보다 넉넉히 뒤면 돌아왔다.
+        """
+        t9 = self._tm_gone.get(slot)
+        if not t9 or not isinstance(q, dict) or q.get("age") is None:
+            return False
+        la9 = self._team_list_at(now)
+        try:
+            beat9 = (la9 if la9 is not None else now) - float(q.get("age") or 0)
+        except (TypeError, ValueError):
+            return False
+        return beat9 > float(t9) + self.TEAM_BACK_MARGIN
+
     def _team_gone(self, slot):
         """방금 나간 사람인가 — 묵은 방 명단(room_list)이 아직 그 방 번호를
         싣고 있어도 되살리지 않는다. 다시 들어오면(tmy·참여) 지운다."""
@@ -26182,9 +26356,15 @@ class Mascot:
         out = []
         for sl, (t0, vow, stt, fr) in list(self._tm_bye.items()):
             t = now - t0
-            if t < 0 or t > self.TEAM_BYE_HOLD + self.TEAM_BYE_FADE:
+            # **조금 음수는 '막 시작'이다.** 프레임은 머리에서 '지금'을 한 번
+            # 재고, 같은 프레임 안에서 나감 신호를 받아 시작한 연출은
+            # time.time() 이라 그보다 조금 늦다. 음수를 '끝남'으로 읽어
+            # 시작하자마자 지웠다 — 진짜 앱에서 퇴장 연출이 한 번도 안 뜬
+            # 뿌리다 (제보 · 방장 화면 포함). 시계가 크게 뒤로 갔을 때만 버린다.
+            if t < -5.0 or t > self.TEAM_BYE_HOLD + self.TEAM_BYE_FADE:
                 self._tm_bye.pop(sl, None)
                 continue
+            t = max(0.0, t)
             a = (1.0 if t < self.TEAM_BYE_HOLD else
                  max(0.0, 1.0 - (t - self.TEAM_BYE_HOLD) / self.TEAM_BYE_FADE))
             out.append((sl, vow, stt, fr, a, t))
@@ -35619,7 +35799,7 @@ class Mascot:
                             word = "%s 님이 편지에 하트를 보냈어요 ♥" % nm
                         # 캐릭터를 눌러야 꺼진다 (요청 — hold)
                         self._say(word, 8.0, big=True, btn="열어 보기",
-                                  act=self._note_win, hold=True)
+                                  act=self._note_open_mail, hold=True)
                         self._mail_bub = word
                         self._safe("note_snd", self._sparkle_sound)
             elif kind == "sent_ok":
@@ -36004,6 +36184,16 @@ class Mascot:
             ack = 0
         d = self._notes_get()
         return any(int(r.get("id") or 0) > ack for r in d["list"])
+
+    def _note_open_mail(self):
+        """편지 도착 말풍선에서 연다 — 봉투를 들이고 쪽지함을 띄운다.
+
+        캐릭터 어디를 눌러도 여는 길(_on_press 의 편지 블록)과 같은 일을
+        한다. 봉투를 안 들이면 창을 연 뒤에도 책상 위 봉투가 남는다.
+        """
+        self._safe("note_ack", self._note_desk_ack)
+        self._mail_bub = None
+        self._note_win()
 
     def _note_desk_ack(self):
         """캐릭터를 눌렀다 — 봉투를 들인다 (번호는 큰 쪽으로만)."""
