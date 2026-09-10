@@ -7755,6 +7755,7 @@ class Mascot:
                                                              self.state_dir)
         self._update_win = None      # 업데이트 안내 팝업 (한 번만)
         self._menu_up = False        # 우클릭 메뉴가 떠 있는가 (z 복구를 쉰다)
+        self._menu_at = 0.0          # 그 깃발을 세운 시각 (감시견용)
         self._z_lose = {}            # 창 클래스별로 z순서 싸움에 진 횟수
         self._z_skip = {}            # 못 이겨서 한동안 못 본 척하는 창들
         self._front_wins = []        # '항상 위'보다 앞을 지켜 줄 창들 (_keep_front)
@@ -14146,6 +14147,25 @@ class Mascot:
     Z_GIVEUP = 60.0          # 올려도 또 덮는 창은 이만큼 못 본 척한다
     Z_LOSE = 3               # 이만큼 연달아 지면 그 창은 못 이기는 상대다
 
+    def _u32z(self):
+        """z순서를 **바꾸는** 데 쓸 user32 손잡이 — 규격을 정해 따로 연다.
+
+        SetWindowPos 의 둘째 인자(HWND_TOPMOST = -1)를 규격 없이 넘기면
+        64비트에서 잘려 조용히 실패한다 (지뢰 23). 공용 windll 에 규격을
+        정하면 남의 코드까지 묶이므로(지뢰 21) 자기 것을 연다.
+        """
+        got = getattr(self, "_u32zd", None)
+        if got is None:
+            got = ctypes.WinDLL("user32")
+            got.SetWindowPos.argtypes = [
+                ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int, ctypes.c_int,
+                ctypes.c_int, ctypes.c_int, ctypes.c_uint]
+            got.SetWindowPos.restype = ctypes.c_int
+            got.GetWindowLongW.argtypes = [ctypes.c_void_p, ctypes.c_int]
+            got.GetWindowLongW.restype = ctypes.c_long
+            self._u32zd = got
+        return got
+
     def _u32_pid(self):
         """창 주인(프로세스)을 묻는 데 쓸 user32 손잡이 — 따로 연다.
 
@@ -14239,7 +14259,24 @@ class Mascot:
         # '항상 위'를 일부러 내려 두는데(_menu_popup), 아래 되걸기가 그걸
         # '풀렸다'로 보고 1초 만에 도로 걸어 메뉴를 덮었다 (제보).
         if self._menu_up:
-            return
+            # 감시견 — 메뉴가 화면에 없는데 깃발만 서 있으면(띄우다 터짐 등)
+            # 풀어 준다. 이 깃발이 서 있는 한 아래 복구가 통째로 안 돈다.
+            stuck = False
+            try:
+                stuck = not self._menu.winfo_ismapped()
+            except Exception:
+                stuck = True
+            if not (stuck and now - getattr(self, "_menu_at", 0.0) > 3.0) \
+                    and now - getattr(self, "_menu_at", 0.0) < 60.0:
+                return
+            self._menu_up = False
+            if self.us.get("topmost", True):
+                try:
+                    self.root.attributes("-topmost", True)
+                except Exception:
+                    pass
+                self._menu_layers_topmost(True)
+            self._z_note("menu_stuck")
         self._z_pin_at = now
         u = ctypes.windll.user32
         # **'항상 위' 표식이 풀렸는가.** 다른 창 뒤에 놓이는 SetWindowPos 나
@@ -14250,8 +14287,23 @@ class Mascot:
         try:
             ex9 = u.GetWindowLongW(self._main_hwnd, -20)
             if not (ex9 & 0x8):
-                u.SetWindowPos(self._main_hwnd, -1, 0, 0, 0, 0,
-                               0x1 | 0x2 | 0x10)           # HWND_TOPMOST
+                # **규격 있는 손잡이로.** 공용 windll 에 -1 을 그냥 넘기면
+                # 64비트에서 HWND_TOPMOST 가 0x00000000FFFFFFFF 로 잘려
+                # '잘못된 창'으로 **조용히 실패**했다 — 표식이 한 번 풀리면
+                # 영영 못 돌아왔다 (젖소 도로롱 '다른 창 아래로'의 뿌리 ·
+                # 지뢰 23). 그래도 안 걸리면 Tk 에 껐다 켜기로 다시 시킨다
+                # (Tk 는 제 기억이 '켜짐'이면 같은 값을 다시 안 건다).
+                uz = self._u32z()
+                if not uz.SetWindowPos(ctypes.c_void_p(self._main_hwnd),
+                                       ctypes.c_void_p(-1), 0, 0, 0, 0,
+                                       0x1 | 0x2 | 0x10) \
+                        or not (uz.GetWindowLongW(
+                            ctypes.c_void_p(self._main_hwnd), -20) & 0x8):
+                    try:
+                        self.root.attributes("-topmost", False)
+                        self.root.attributes("-topmost", True)
+                    except Exception:
+                        pass
                 lay9 = self._char_lay
                 if lay9 is not None and getattr(lay9, "hwnd", 0):
                     lay9.set_topmost(True)
@@ -14301,13 +14353,18 @@ class Mascot:
         while cur and cur != self._main_hwnd:
             if not is_mine(cur) and u.IsWindowVisible(cur):
                 u.GetWindowRect(cur, ctypes.byref(r))
-                if not (r[2] <= bx0 or bx1 <= r[0]
-                        or r[3] <= by0 or by1 <= r[1]):
-                    if not self._z_real_cover(u, cur):
+                if (r[2] > r[0] and r[3] > r[1]
+                        and not (r[2] <= bx0 or bx1 <= r[0]
+                                 or r[3] <= by0 or by1 <= r[1])):
+                    cls_now = self._z_class(u, cur)
+                    if (not self._z_real_cover(u, cur)
+                            or self._z_ignore(u, cur, cls_now)):
                         cur = u.GetWindow(cur, 2)
                         continue           # 가리는 게 아니다 — 안 싸운다
-                    cls_now = self._z_class(u, cur)
-                    if now - float(skip9.get(cls_now) or 0.0) < self.Z_GIVEUP:
+                    # 포기는 **창 하나**에 대해서만 — 클래스로 하면 크롬
+                    # 계열(브라우저·디스코드·전자 앱)이 전부 한 이름이라
+                    # 하나에 진 60초 동안 진짜 묻힘도 못 본 척했다.
+                    if now - float(skip9.get(cur) or 0.0) < self.Z_GIVEUP:
                         cur = u.GetWindow(cur, 2)
                         continue           # 못 이기는 상대 — 한동안 쉰다
                     buried = True
@@ -14322,13 +14379,13 @@ class Mascot:
         lose9 = getattr(self, "_z_lose", None)
         if lose9 is None:
             lose9 = self._z_lose = {}
-        n9 = int(lose9.get(cls_now) or 0) + 1
-        lose9[cls_now] = n9
+        n9 = int(lose9.get(cur) or 0) + 1
+        lose9[cur] = n9
         if len(lose9) > 20:
             lose9.clear()
         if n9 >= self.Z_LOSE:
-            skip9[cls_now] = now
-            lose9.pop(cls_now, None)
+            skip9[cur] = now
+            lose9.pop(cur, None)
             if len(skip9) > 20:
                 for k9 in list(skip9)[:10]:
                     skip9.pop(k9, None)
@@ -14356,6 +14413,38 @@ class Mascot:
         self._last_pos = None
         self._panel_z = 0.0
         self._z_check = 0.0
+
+    # 이길 수도 없고 실제로 가리지도 않는 창들 — 작업표시줄(자동 숨김이면
+    # 화면 끝에 걸쳐 있다)·바탕화면·툴팁·작업 보기·시작 메뉴 껍데기.
+    # 내 기록 실측: Shell_SecondaryTrayWnd 에 스무 번 넘게 '졌다'.
+    Z_IGNORE_CLS = frozenset((
+        "Shell_TrayWnd", "Shell_SecondaryTrayWnd", "Progman", "WorkerW",
+        "XamlExplorerHostIslandWindow", "Windows.UI.Core.CoreWindow",
+        "tooltips_class32", "ForegroundStaging", "MultitaskingViewFrame",
+        "Xaml_WindowedPopupClass", "Shell_InputSwitchTopLevelWindow",
+        "TaskListThumbnailWnd", "NotifyIconOverflowWindow", "TopLevelWindowForOverflowXamlIsland",
+    ))
+
+    def _z_ignore(self, u, hwnd, cls):
+        """싸우지 않을 창인가 — 껍데기 클래스, 또는 DWM 이 가려 둔(cloaked)
+        창. UWP·시작 메뉴 같은 창은 안 보여도 IsWindowVisible 이 참이라,
+        '덮였다'로 세어 포기 주기를 계속 불렀다."""
+        if cls in self.Z_IGNORE_CLS:
+            return True
+        try:
+            dwm = getattr(self, "_dwm9", None)
+            if dwm is None:
+                dwm = self._dwm9 = ctypes.WinDLL("dwmapi")   # 지뢰 21
+                dwm.DwmGetWindowAttribute.argtypes = [
+                    ctypes.c_void_p, ctypes.c_uint, ctypes.c_void_p, ctypes.c_uint]
+                dwm.DwmGetWindowAttribute.restype = ctypes.c_long
+            v9 = ctypes.c_uint(0)
+            if dwm.DwmGetWindowAttribute(ctypes.c_void_p(hwnd), 14,   # CLOAKED
+                                         ctypes.byref(v9), 4) == 0 and v9.value:
+                return True
+        except Exception:
+            pass
+        return False
 
     @staticmethod
     def _z_class(u, hwnd):
@@ -14810,20 +14899,7 @@ class Mascot:
         # 메뉴가 떠 있는 동안 z순서 되걸기를 쉬게 한다 (_z_pin). 안 그러면
         # 아래에서 내려 둔 '항상 위'를 1초 만에 도로 걸어 메뉴를 덮는다.
         self._menu_up = True
-        if was:
-            try:
-                self.root.attributes("-topmost", False)
-            except Exception:
-                pass
-            # 그림자·파티클도 같이 내린다. 캐릭터만 내리면 그 둘이 위로
-            # 올라와, 우클릭할 때마다 그림자가 번쩍 보인다(제보).
-            self._menu_layers_topmost(False)
-        try:
-            self._menu.tk_popup(int(x), int(y))
-        finally:
-            self._menu.grab_release()
-        if was:
-            self._menu_layers_topmost(True)
+        self._menu_at = time.time()      # _z_pin 의 감시견이 본다
 
         def back(tries=0):
             """메뉴가 다 닫힌 뒤에 되돌린다. **어느 길로 왔든 부른다** —
@@ -14837,9 +14913,32 @@ class Mascot:
                 if was:
                     self.root.attributes("-topmost", True)
                     self.root.lift()
+                    self._menu_layers_topmost(True)
             except Exception:
                 self._menu_up = False
-        self.root.after(250, back)
+
+        # **띄우다 터져도** 되돌리는 길을 반드시 예약한다. 예전에는
+        # tk_popup 이 예외를 내면(grab 실패 등) 여기 못 와서 항상 위가
+        # 내려간 채 깃발이 영영 서 있었고, 그때부터 _z_pin 이 한 번도
+        # 안 돌아 '다른 창 아래로 내려가는' 상태로 굳었다 (젖소 도로롱).
+        try:
+            if was:
+                try:
+                    self.root.attributes("-topmost", False)
+                except Exception:
+                    pass
+                # 그림자·파티클도 같이 내린다. 캐릭터만 내리면 그 둘이 위로
+                # 올라와, 우클릭할 때마다 그림자가 번쩍 보인다(제보).
+                self._menu_layers_topmost(False)
+            try:
+                self._menu.tk_popup(int(x), int(y))
+            finally:
+                self._menu.grab_release()
+        finally:
+            try:
+                self.root.after(250, back)
+            except Exception:
+                self._menu_up = False
 
     RESET_KEEP = 5           # 초기화 백업을 몇 벌 남길지
 
