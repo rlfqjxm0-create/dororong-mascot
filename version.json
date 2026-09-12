@@ -1,7 +1,7 @@
 {
- "version": 1789224495,
+ "version": 1789257547,
  "files": {
-  "mascot.py": "5fccdc816afc94fd084dcd2c19a2a0e083ba273de2871d02f8bc3b4cca0b849e",
+  "mascot.py": "1eca135341642be61ba8ad23fcc5e3441ca685ace5f135c611bd39cd7e31abef",
   "parts_dororong_gift/arm_key.png": "1a20520a92e7fba220c28198abe91cc991e14c42b8605da6692dd7c5a356bb49",
   "parts_dororong_gift/arm_pen.png": "457e108fb10fd4d5fd69907a25f849cbadc5e697e501ba39cefc8c656bddca38",
   "parts_dororong_gift/arm_right.png": "424b5670203314be96a4332ed79fe911b1f58c094f44452b67b7257019154d5e",
@@ -13,7 +13,7 @@
   "parts_dororong_gift/chip_meta.json": "19d1e6c8695852c7445dbb541df4050fb3d0ca7eb0fcbfb71f30cd96c3c757d2",
   "parts_dororong_gift/chip_movie.png": "43bfa1493af45a8adc05b455acda466b56cad4394229cd8a706ae5cde09ed642",
   "parts_dororong_gift/chip_spoon.png": "9c1f69af5de27a78fcff161bc8cacbe21aa3ce8cc5b8ea8294517ae23925f08f",
-  "parts_dororong_gift/config.json": "fdfe9b675b31ce70f754c19660861f408a026bc4b74c252b35424494985f2088",
+  "parts_dororong_gift/config.json": "265af236b9e6824ca097c0af38845888271144f84ccf977900e8388a4d982208",
   "parts_dororong_gift/config.json.bak": "459cd4664d3c4ea7a8fdbe49ca14272fd3d584d43a2a905b8f998f36041b6e09",
   "parts_dororong_gift/crown.png": "b1b7426a0222ac294a782cb06db6c9c4aba4e660591dd1761dc9e4da050175fc",
   "parts_dororong_gift/desk.png": "161ef5b6c5db3e227bcbaa28b8b7af242240030692a69563b382898f31b31450",
@@ -584,6 +584,10 @@
   "parts_dororong/seat_meta.json": "8c0ae9658f49eb76a991029b7788f4bd04dcc36ae038e55475b601fab6ad108e",
   "parts_dororong/wg_head.png": "ce59b9054cd073f72e1338372e9d60a959a0bbac3582150ea0115520a65b3c4f"
  },
- "notes": [],
- "silent": true
+ "notes": [
+  "**다크 테마가 생겼어요 (윈도우)** — 환경설정 › 표시 › 테마에서 '다크'를 고르고 저장하면, 캐릭터 타이머 카드·할 일/마감 말풍선·홈·뽀모도로·플레이리스트·환경설정·우클릭 메뉴까지 모든 창이 흑백 톤으로 바뀌어요",
+  "다크 테마에서는 글자가 하얗게 보이고, 마감 말풍선의 D-day 는 가까워지면 원래처럼 주황·빨강으로 보여요. 홈 타이틀 그림은 흑백, 바탕 점무늬는 은은하게 바뀌어요",
+  "음악을 트는 동안 CPU 사용이 절반 가까이 줄었어요 — 머리 위 음표 하나 때문에 재생 내내 초당 60번 다시 그리고 있었어요 · 데드라인 시계가 쓰는 메모리도 줄였어요",
+  "뽀모도로 창 — 아래 가장자리를 잡고 끌어도 크기가 바뀌어요 · 끌어 정한 크기(배율·넓힌 폭)를 다음에 켤 때도 기억해요 (데드라인·스톱워치 탭에서 끄거나 탭을 바꿔도 작아지지 않아요)"
+ ]
 }
